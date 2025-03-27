@@ -1,12 +1,19 @@
-import openpyxl
+import json
 from pathlib import Path
-
-EXCEL_PATH = Path("user.xlsx")
+from constants import JSON_PATH
 
 def get_user_by_email(email: str):
-    wb = openpyxl.load.workbook(EXCEL_PATH)
-    sheet = wb.active
-    for row in sheet.iter_rows(min_rows=2, values_only=True):
-        if row[0]== email:
-            return {"email": row[0], "password": row[1]}
+
+    with open(JSON_PATH, "r") as f:
+        users = json.load(f)
+
+    for user in users:
+        if user["email"] == email:
+            return {
+                "email": user["email"],
+                "password": user["password"],
+                "username": user["username"],
+                "role": user["role"]
+            }
+    
     return None
